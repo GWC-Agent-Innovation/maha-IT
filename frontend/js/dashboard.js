@@ -81,6 +81,7 @@
           <div><dt class="inline text-slate-500">Certificate No.:</dt> <dd class="inline font-mono">${e(a.certificate_number)}</dd></div>
           <div><dt class="inline text-slate-500">Application No.:</dt> <dd class="inline font-mono">${e(a.reference)}</dd></div>
           <div><dt class="inline text-slate-500">Issued On:</dt> <dd class="inline">${formatDateTime(a.issued_at)}</dd></div>
+          <div><dt class="inline text-slate-500">Validity:</dt> <dd class="inline font-semibold ${a.validity.startsWith("Expired") ? "text-red-700" : "text-green-700"}">${e(a.validity)}</dd></div>
         </dl>
         <a href="${a.download_url}" class="btn btn-accent mt-4">Download Certificate</a>
       </article>`).join("")}</div>`;

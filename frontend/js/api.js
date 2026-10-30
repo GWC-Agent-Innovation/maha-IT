@@ -60,6 +60,8 @@ const Api = (function () {
         body: JSON.stringify(data),
       }),
     myApplications: (mobile) => request("/api/citizens/" + encodeURIComponent(mobile) + "/applications"),
+    checkEligibility: (mobile, certType) =>
+      request("/api/citizens/" + encodeURIComponent(mobile) + "/eligibility/" + encodeURIComponent(certType)),
     myPayments: (mobile) => request("/api/citizens/" + encodeURIComponent(mobile) + "/payments"),
     getApplication: (reference) => request("/api/applications/" + encodeURIComponent(reference)),
     getStatus: (reference) =>

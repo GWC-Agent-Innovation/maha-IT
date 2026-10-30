@@ -27,6 +27,7 @@ from ..schemas import (
 )
 from ..services.references import new_application_reference
 from ..services.storage import certificate_path, safe_display_name, save_upload
+from ..services.validity import application_block_reason, validity_label
 
 router = APIRouter(prefix="/api/applications", tags=["applications"])
 
@@ -68,6 +69,9 @@ def submit_application(payload: ApplicationCreate, db: Session = Depends(get_db)
     errors = validate_specific_fields(cert_info, payload.specific_data)
     if errors:
         raise HTTPException(422, {"message": "Please correct the highlighted fields.", "fields": errors})
+    blocked = application_block_reason(db, payload.account_mobile, payload.certificate_type)
+    if blocked:
+        raise HTTPException(409, {"message": blocked})
 
     allowed_keys = {f["name"] for f in cert_info["fields"]}
     specific = {k: v for k, v in payload.specific_data.items() if k in allowed_keys}
@@ -170,6 +174,8 @@ def application_detail(reference: str, db: Session = Depends(get_db)):
             officer_name=cert.officer_name,
             officer_designation=cert.officer_designation,
             issued_at=cert.issued_at,
+            valid_until=cert.valid_until,
+            validity=validity_label(app.certificate_type, cert.valid_until),
             download_url=(
                 f"/api/applications/{app.reference}/certificate"
                 if certificate_ready(app) else None

@@ -403,11 +403,31 @@
 
   // ---------- Initial load ----------
 
+  function showNotEligible(cert, message) {
+    document.title = "Apply – " + cert.name + " | Citizen Certificate Portal";
+    document.querySelector("main").innerHTML = `
+      <div class="card p-6 max-w-2xl mx-auto">
+        <h1 class="text-xl font-bold" style="color: var(--navy)">${e(cert.name)}</h1>
+        <div class="mt-4 rounded-md border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">${e(message)}</div>
+        <p class="mt-3 text-sm text-slate-600"><span class="font-semibold">Validity:</span> ${e(cert.validity)}. ${e(cert.reapply_note)}</p>
+        <div class="mt-5 flex flex-wrap gap-3">
+          <a href="dashboard.html" class="btn btn-primary">Go to My Account</a>
+          <a href="index.html#services" class="btn btn-secondary">Back to Services</a>
+        </div>
+      </div>`;
+  }
+
   async function init() {
     const id = queryParam("id");
     try {
       const [cert, districts] = await Promise.all([Api.getCertificate(id || ""), Api.listDistricts()]);
       state.cert = cert;
+      // Stop before the form and payment if the citizen cannot apply again yet.
+      const eligibility = await Api.checkEligibility(Session.current().mobile, cert.id);
+      if (!eligibility.eligible) {
+        showNotEligible(cert, eligibility.message);
+        return;
+      }
       document.title = "Apply – " + cert.name + " | Citizen Certificate Portal";
       document.getElementById("cert-name").textContent = cert.name;
       document.getElementById("specific-title").textContent = cert.name;

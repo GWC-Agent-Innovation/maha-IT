@@ -1,7 +1,8 @@
 """Minimal schema upgrades for existing SQLite databases.
 
 Version 1 databases had no citizen account link on applications and stored
-only successful payments. This upgrade keeps their data.
+only successful payments. Version 2 databases had no certificate validity.
+These upgrades keep existing data.
 """
 from sqlalchemy import Engine, inspect, text
 
@@ -23,6 +24,16 @@ def upgrade_schema(engine: Engine) -> None:
             conn.execute(text(
                 "CREATE INDEX IF NOT EXISTS ix_applications_account_mobile "
                 "ON applications (account_mobile)"
+            ))
+
+        if "certificates" in tables and "valid_until" not in _columns(engine, "certificates"):
+            conn.execute(text("ALTER TABLE certificates ADD COLUMN valid_until DATE"))
+            # Certificates issued before validity rules existed: 1 year for the
+            # types that expire, permanent (NULL) for caste and domicile.
+            conn.execute(text(
+                "UPDATE certificates SET valid_until = date(issued_at, '+1 year', '-1 day') "
+                "WHERE application_id IN (SELECT id FROM applications WHERE certificate_type "
+                "IN ('income', 'residence', 'non-creamy-layer'))"
             ))
 
         if "payment_records" in tables and "status" not in _columns(engine, "payment_records"):

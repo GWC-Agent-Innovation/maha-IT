@@ -35,6 +35,11 @@
             <h2 class="font-bold text-lg mb-2" style="color: var(--navy)">Processing Time</h2>
             <p class="text-sm">${e(cert.processing_time)}</p>
           </section>
+          <section class="md:col-span-2">
+            <h2 class="font-bold text-lg mb-2" style="color: var(--navy)">Validity</h2>
+            <p class="text-sm font-semibold">${e(cert.validity)}</p>
+            <p class="text-sm text-slate-600 mt-1">${e(cert.reapply_note)}</p>
+          </section>
         </div>
         <div class="px-6 pb-6">
           <div class="flex flex-wrap gap-3">

@@ -29,6 +29,7 @@ from ..models import (
 from .pdf import generate_certificate_pdf
 from .references import new_certificate_number
 from .storage import certificate_path
+from .validity import compute_valid_until
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +52,7 @@ def approve_application(db: Session, app: Application) -> None:
         officer_name=officer_name,
         officer_designation=designation,
         issued_at=now,
+        valid_until=compute_valid_until(app.certificate_type, now),
     )
     app.history.append(StatusHistory(
         status=STATUS_APPROVED,

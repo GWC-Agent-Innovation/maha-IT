@@ -11,7 +11,8 @@ from sqlalchemy.orm import Session
 from ..catalog import get_certificate
 from ..database import get_db
 from ..models import PAYMENT_FAILED, Application, PaymentRecord
-from ..schemas import CitizenApplicationOut, FailedPaymentIn, PaymentHistoryOut
+from ..schemas import CitizenApplicationOut, EligibilityOut, FailedPaymentIn, PaymentHistoryOut
+from ..services.validity import application_block_reason, validity_label
 from .applications import certificate_ready
 
 router = APIRouter(prefix="/api", tags=["citizens"])
@@ -74,6 +75,8 @@ def citizen_applications(mobile: str = MobilePath, db: Session = Depends(get_db)
             created_at=app.created_at,
             certificate_number=cert.certificate_number if cert else None,
             issued_at=cert.issued_at if cert else None,
+            valid_until=cert.valid_until if cert else None,
+            validity=validity_label(app.certificate_type, cert.valid_until) if cert else "",
             download_url=f"/api/applications/{app.reference}/certificate" if ready else None,
         ))
     return result
@@ -87,3 +90,19 @@ def citizen_payments(mobile: str = MobilePath, db: Session = Depends(get_db)):
         .order_by(PaymentRecord.paid_at.desc())
     ).all()
     return [_payment_out(p) for p in payments]
+
+
+@router.get("/citizens/{mobile}/eligibility/{certificate_type}", response_model=EligibilityOut)
+def citizen_eligibility(certificate_type: str, mobile: str = MobilePath, db: Session = Depends(get_db)):
+    """Check whether this account can apply for a certificate now (before payment)."""
+    info = get_certificate(certificate_type)
+    if info is None:
+        raise HTTPException(404, "Certificate service not found.")
+    reason = application_block_reason(db, mobile, certificate_type)
+    return EligibilityOut(
+        certificate_type=certificate_type,
+        eligible=reason is None,
+        message=reason,
+        validity=info["validity"],
+        reapply_note=info["reapply_note"],
+    )

@@ -1,3 +1,4 @@
+import itertools
 import os
 import tempfile
 
@@ -23,10 +24,19 @@ def client():
         yield test_client
 
 
+_accounts = itertools.count(9000000001)
+
+
+def new_mobile() -> str:
+    """A fresh account number, so the one-active-certificate rules do not
+    block unrelated tests."""
+    return str(next(_accounts))
+
+
 def income_payload(**overrides):
     payload = {
         "certificate_type": "income",
-        "account_mobile": "9876543210",
+        "account_mobile": new_mobile(),
         "full_name": "Ramesh Kumar Patil",
         "date_of_birth": "1990-05-14",
         "gender": "Male",

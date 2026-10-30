@@ -1,7 +1,7 @@
 """Database models."""
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
-from sqlalchemy import JSON, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import JSON, Date, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from .database import Base
@@ -119,6 +119,8 @@ class Certificate(Base):
     officer_designation: Mapped[str] = mapped_column(String(120))
     file_name: Mapped[str | None] = mapped_column(String(80), nullable=True)
     issued_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+    # Last valid day; None for permanent certificates (caste, domicile).
+    valid_until: Mapped[date | None] = mapped_column(Date, nullable=True)
     generated_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     application: Mapped[Application] = relationship(back_populates="certificate")

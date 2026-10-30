@@ -16,6 +16,12 @@ MAHARASHTRA_DISTRICTS = [
 
 CASTE_CATEGORIES = ["SC", "ST", "OBC", "VJ/DT (NT-A)", "NT-B", "NT-C", "NT-D", "SBC"]
 
+# Re-application rules, by certificate type.
+ONCE = "once"                  # permanent: one certificate per citizen account
+AFTER_EXPIRY = "after_expiry"  # one valid certificate at a time
+ANYTIME = "anytime"            # no limit on applications
+
+# validity_months: None means the certificate does not expire.
 # Field definition keys: name, label, type (text|number|select|textarea), required, options
 CERTIFICATES = [
     {
@@ -33,6 +39,10 @@ CERTIFICATES = [
         "documents": ["Identity Proof", "Address Proof", "Income Proof"],
         "fee": 33.60,
         "processing_time": "Up to 15 working days",
+        "validity_months": 12,
+        "reapply": AFTER_EXPIRY,
+        "validity": "1 year from the date of issue",
+        "reapply_note": "A new application can be made after the current certificate expires.",
         "fields": [
             {"name": "occupation", "label": "Occupation", "type": "text", "required": True},
             {"name": "annual_family_income", "label": "Annual Family Income (₹)", "type": "number", "required": True},
@@ -58,6 +68,10 @@ CERTIFICATES = [
         "documents": ["Identity Proof", "Address Proof", "Caste Proof of Father / Relative"],
         "fee": 57.20,
         "processing_time": "Up to 21 working days",
+        "validity_months": None,
+        "reapply": ONCE,
+        "validity": "Permanent",
+        "reapply_note": "Issued once and valid for life. A new application is not required.",
         "fields": [
             {"name": "caste_category", "label": "Caste Category", "type": "select", "required": True, "options": CASTE_CATEGORIES},
             {"name": "caste", "label": "Caste", "type": "text", "required": True},
@@ -80,6 +94,10 @@ CERTIFICATES = [
         "documents": ["Identity Proof", "Address Proof", "Proof of Residence for 10 Years"],
         "fee": 33.60,
         "processing_time": "Up to 15 working days",
+        "validity_months": None,
+        "reapply": ONCE,
+        "validity": "Permanent",
+        "reapply_note": "Issued once for the permanent place of residence or origin, and valid for life.",
         "fields": [
             {"name": "place_of_birth", "label": "Place of Birth", "type": "text", "required": True},
             {"name": "residence_place", "label": "Place of Residence in Maharashtra", "type": "text", "required": True},
@@ -104,6 +122,10 @@ CERTIFICATES = [
         "documents": ["Identity Proof", "Address Proof"],
         "fee": 33.60,
         "processing_time": "Up to 7 working days",
+        "validity_months": 12,
+        "reapply": AFTER_EXPIRY,
+        "validity": "1 year from the date of issue",
+        "reapply_note": "Confirms the current address. A new application can be made after the current certificate expires.",
         "fields": [
             {
                 "name": "residence_type", "label": "Type of Residence", "type": "select", "required": True,
@@ -128,6 +150,10 @@ CERTIFICATES = [
         "documents": ["Identity Proof", "Caste Certificate", "Income Proof of Parents"],
         "fee": 57.20,
         "processing_time": "Up to 21 working days",
+        "validity_months": 12,
+        "reapply": ANYTIME,
+        "validity": "1 year from the date of issue",
+        "reapply_note": "Can be applied for at any time, for example when family income changes.",
         "fields": [
             {"name": "caste_category", "label": "Caste Category", "type": "select", "required": True, "options": CASTE_CATEGORIES},
             {"name": "caste", "label": "Caste", "type": "text", "required": True},

@@ -36,3 +36,32 @@ def test_upgrade_from_v1_schema_keeps_payments(tmp_path):
         )).one()
     assert tuple(row) == ("9876543210", "income", "SUCCESS", "TXN-OLD-1")
     assert "payment_records_v1" not in inspect(engine).get_table_names()
+
+
+def test_upgrade_adds_certificate_validity(tmp_path):
+    engine = create_engine(f"sqlite:///{tmp_path / 'v2.db'}")
+    with engine.begin() as conn:
+        conn.execute(text(
+            "CREATE TABLE applications (id INTEGER PRIMARY KEY, certificate_type VARCHAR(32), "
+            "account_mobile VARCHAR(10))"
+        ))
+        conn.execute(text(
+            "CREATE TABLE certificates (id INTEGER PRIMARY KEY, application_id INTEGER, "
+            "certificate_number VARCHAR(40), officer_name VARCHAR(120), "
+            "officer_designation VARCHAR(120), file_name VARCHAR(80), issued_at DATETIME, "
+            "generated_at DATETIME)"
+        ))
+        conn.execute(text(
+            "INSERT INTO applications (id, certificate_type, account_mobile) "
+            "VALUES (1, 'income', '9876543210'), (2, 'caste', '9876543210')"
+        ))
+        conn.execute(text(
+            "INSERT INTO certificates (application_id, certificate_number, issued_at) VALUES "
+            "(1, 'MH-INC-OLD', '2026-03-15 10:00:00'), (2, 'MH-CST-OLD', '2026-03-15 10:00:00')"
+        ))
+
+    upgrade_schema(engine)
+
+    with engine.connect() as conn:
+        rows = dict(conn.execute(text("SELECT certificate_number, valid_until FROM certificates")).all())
+    assert rows == {"MH-INC-OLD": "2027-03-14", "MH-CST-OLD": None}

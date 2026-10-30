@@ -102,6 +102,8 @@ class CitizenApplicationOut(BaseModel):
     created_at: datetime
     certificate_number: str | None
     issued_at: datetime | None
+    valid_until: date | None
+    validity: str
     download_url: str | None
 
 
@@ -110,7 +112,17 @@ class CertificateOut(BaseModel):
     officer_name: str
     officer_designation: str
     issued_at: datetime
+    valid_until: date | None
+    validity: str
     download_url: str | None
+
+
+class EligibilityOut(BaseModel):
+    certificate_type: str
+    eligible: bool
+    message: str | None
+    validity: str
+    reapply_note: str
 
 
 class StatusOut(BaseModel):
