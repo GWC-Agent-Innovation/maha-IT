@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Citizen Registration | Citizen Certificate Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  <div id="site-header"></div>
+
+  <main class="flex-1 px-4 py-10">
+    <div class="max-w-lg mx-auto card p-6 sm:p-8">
+      <h1 class="text-2xl font-bold" style="color: var(--navy)">Citizen Registration</h1>
+      <p class="text-sm text-slate-500 mt-1">Create your citizen account. Your mobile number will be your login ID.</p>
+
+      <form id="register-form" class="mt-6 grid gap-4 sm:grid-cols-2" novalidate>
+        <div data-field class="sm:col-span-2">
+          <label for="name" class="label">Full Name <span class="req">*</span></label>
+          <input id="name" class="input" placeholder="As per identity proof" data-rules="required name" autocomplete="name">
+        </div>
+        <div data-field>
+          <label for="mobile" class="label">Mobile Number <span class="req">*</span></label>
+          <input id="mobile" class="input" inputmode="numeric" maxlength="10" data-rules="required mobile" autocomplete="tel">
+        </div>
+        <div data-field>
+          <label for="email" class="label">Email <span class="req">*</span></label>
+          <input id="email" type="email" class="input" data-rules="required email" autocomplete="email">
+        </div>
+        <div data-field>
+          <label for="password" class="label">Password <span class="req">*</span></label>
+          <input id="password" type="password" class="input" data-rules="required password" autocomplete="new-password">
+        </div>
+        <div data-field>
+          <label for="confirm" class="label">Confirm Password <span class="req">*</span></label>
+          <input id="confirm" type="password" class="input" data-rules="required" autocomplete="new-password">
+        </div>
+        <div data-field class="sm:col-span-2">
+          <label class="flex items-start gap-2 text-sm">
+            <input id="consent" type="checkbox" class="mt-1">
+            <span>I agree to the terms of use and privacy policy of the portal.</span>
+          </label>
+        </div>
+        <div class="sm:col-span-2 flex flex-col gap-3">
+          <button class="btn btn-primary w-full">Register</button>
+        </div>
+      </form>
+
+      <p class="text-sm text-center mt-6">Already registered? <a id="login-link" href="login.html" class="font-semibold underline" style="color: var(--navy)">Login here</a></p>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/session.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

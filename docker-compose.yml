@@ -1,0 +1,17 @@
+services:
+  portal:
+    build: .
+    container_name: maha-certificate-portal
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      APPROVAL_DELAY_SECONDS: "${APPROVAL_DELAY_SECONDS:-90}"
+      APPROVAL_POLL_SECONDS: "10"
+      MAX_UPLOAD_MB: "5"
+      PUBLIC_BASE_URL: "http://localhost:${PORT:-8000}"
+    volumes:
+      - portal_data:/data
+    restart: unless-stopped
+
+volumes:
+  portal_data:

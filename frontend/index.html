@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Citizen Certificate Portal | Government of Maharashtra</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  <div id="site-header"></div>
+
+  <main class="flex-1">
+    <!-- Hero -->
+    <section class="text-white" style="background: linear-gradient(135deg, #1e3a8a 0%, #2b4fb3 60%, #e8711a 140%)">
+      <div class="max-w-6xl mx-auto px-4 py-12 grid gap-8 md:grid-cols-2 items-center">
+        <div>
+          <h1 class="text-3xl sm:text-4xl font-bold leading-tight">Apply for government certificates online</h1>
+          <p class="mt-3 text-blue-100">Browse services, submit your application with documents, pay the fee and download your certificate – all in one place.</p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="#services" class="btn btn-accent">Browse Services</a>
+            <a href="track.html" class="btn bg-white text-blue-900 hover:bg-blue-50">Track Application</a>
+          </div>
+        </div>
+        <form id="track-form" class="card p-6 text-slate-800">
+          <h2 class="font-semibold text-lg" style="color: var(--navy)">Track your application</h2>
+          <p class="text-sm text-slate-500 mb-3">Enter the reference number you received after submission.</p>
+          <div data-field>
+            <label for="track-ref" class="label">Application Reference Number</label>
+            <input id="track-ref" class="input uppercase" placeholder="MH-APP-20261030-XXXXXX" data-rules="required">
+          </div>
+          <button class="btn btn-primary mt-4 w-full">Track Status</button>
+        </form>
+      </div>
+    </section>
+
+    <div class="max-w-6xl mx-auto px-4">
+      <!-- Announcements -->
+      <section class="mt-8 card p-4 flex flex-col sm:flex-row gap-3 sm:items-center">
+        <span class="text-xs font-bold uppercase tracking-wide text-white px-2 py-1 rounded self-start" style="background: var(--saffron)">Announcements</span>
+        <ul class="text-sm text-slate-700 space-y-1">
+          <li>• Non-Creamy Layer certificates for the academic year 2026–27 can now be applied for online.</li>
+          <li>• Keep your Aadhaar-linked mobile number handy for faster processing.</li>
+          <li>• Track your application status and download issued certificates from <a href="dashboard.html" class="underline">My Account</a>.</li>
+        </ul>
+      </section>
+
+      <!-- Services -->
+      <section id="services" class="mt-10">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold" style="color: var(--navy)">Certificate Services</h2>
+            <p class="text-slate-500 text-sm">Select a certificate to view eligibility, documents and apply.</p>
+          </div>
+          <div class="w-full sm:w-72">
+            <label for="service-search" class="sr-only">Search services</label>
+            <input id="service-search" class="input" placeholder="Search certificates…">
+          </div>
+        </div>
+        <div id="service-grid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <p class="text-slate-500">Loading services…</p>
+        </div>
+        <p id="no-results" class="hidden mt-6 text-slate-500">No certificates match your search.</p>
+      </section>
+
+      <!-- Instructions -->
+      <section id="help" class="mt-12 grid gap-6 md:grid-cols-2">
+        <div class="card p-6">
+          <h2 class="text-xl font-bold mb-3" style="color: var(--navy)">How to apply</h2>
+          <ol class="space-y-3 text-sm">
+            <li class="flex gap-3"><span class="font-bold text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0" style="background: var(--saffron)">1</span>Login or register as a citizen.</li>
+            <li class="flex gap-3"><span class="font-bold text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0" style="background: var(--saffron)">2</span>Choose a certificate and fill in the application form.</li>
+            <li class="flex gap-3"><span class="font-bold text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0" style="background: var(--saffron)">3</span>Upload the required documents (PDF, JPG or PNG, up to 5 MB each).</li>
+            <li class="flex gap-3"><span class="font-bold text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0" style="background: var(--saffron)">4</span>Pay the application fee and submit.</li>
+            <li class="flex gap-3"><span class="font-bold text-white rounded-full w-6 h-6 flex items-center justify-center shrink-0" style="background: var(--saffron)">5</span>Track your application and download the certificate once approved.</li>
+          </ol>
+        </div>
+        <div class="card p-6">
+          <h2 class="text-xl font-bold mb-3" style="color: var(--navy)">Important information</h2>
+          <ul class="space-y-2 text-sm list-disc pl-5">
+            <li>Keep your application reference number safe. You need it to track your application.</li>
+            <li>Make sure uploaded documents are clear and readable.</li>
+                        <li>Issued certificates can be downloaded any time from My Account.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/session.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

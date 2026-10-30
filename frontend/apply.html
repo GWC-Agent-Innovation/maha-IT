@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Apply | Citizen Certificate Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+  <div id="site-header"></div>
+
+  <main class="flex-1 max-w-4xl w-full mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold" style="color: var(--navy)">Apply for <span id="cert-name">Certificate</span></h1>
+    <p class="text-sm text-slate-500">Fields marked <span class="text-red-600">*</span> are mandatory.</p>
+
+    <!-- Stepper -->
+    <ol id="stepper" class="mt-6 grid grid-cols-4 gap-2 text-xs sm:text-sm">
+      <li data-step="1">Applicant Details</li>
+      <li data-step="2">Documents</li>
+      <li data-step="3">Review</li>
+      <li data-step="4">Payment &amp; Submit</li>
+    </ol>
+
+    <!-- Step 1: Application form -->
+    <section id="step-1" class="card p-6 mt-6">
+      <form id="details-form" novalidate>
+        <h2 class="font-bold text-lg mb-4" style="color: var(--navy)">Personal Details</h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div data-field class="sm:col-span-2">
+            <label for="full_name" class="label">Full Name <span class="req">*</span></label>
+            <input id="full_name" name="full_name" class="input" data-rules="required name" autocomplete="name">
+          </div>
+          <div data-field>
+            <label for="date_of_birth" class="label">Date of Birth <span class="req">*</span></label>
+            <input id="date_of_birth" name="date_of_birth" type="date" class="input" data-rules="required pastDate">
+          </div>
+          <div data-field>
+            <label for="gender" class="label">Gender <span class="req">*</span></label>
+            <select id="gender" name="gender" class="input" data-rules="required">
+              <option value="">Select</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div data-field>
+            <label for="mobile" class="label">Mobile Number <span class="req">*</span></label>
+            <input id="mobile" name="mobile" class="input" inputmode="numeric" maxlength="10" data-rules="required mobile">
+          </div>
+          <div data-field>
+            <label for="email" class="label">Email <span class="req">*</span></label>
+            <input id="email" name="email" type="email" class="input" data-rules="required email">
+          </div>
+        </div>
+
+        <h2 class="font-bold text-lg mt-8 mb-4" style="color: var(--navy)">Address Details</h2>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div data-field class="sm:col-span-2">
+            <label for="address" class="label">Address <span class="req">*</span></label>
+            <textarea id="address" name="address" rows="2" class="input" data-rules="required" data-minlength="5"></textarea>
+          </div>
+          <div data-field>
+            <label for="district" class="label">District <span class="req">*</span></label>
+            <select id="district" name="district" class="input" data-rules="required">
+              <option value="">Select district</option>
+            </select>
+          </div>
+          <div data-field>
+            <label for="taluka" class="label">Taluka <span class="req">*</span></label>
+            <input id="taluka" name="taluka" class="input" data-rules="required" data-minlength="2">
+          </div>
+          <div data-field>
+            <label for="pin_code" class="label">PIN Code <span class="req">*</span></label>
+            <input id="pin_code" name="pin_code" class="input" inputmode="numeric" maxlength="6" data-rules="required pin">
+          </div>
+          <div data-field>
+            <label for="certificate_type_display" class="label">Certificate Type</label>
+            <input id="certificate_type_display" class="input bg-slate-100" readonly>
+          </div>
+        </div>
+
+        <h2 class="font-bold text-lg mt-8 mb-4" style="color: var(--navy)"><span id="specific-title">Certificate</span> Details</h2>
+        <div id="specific-fields" class="grid gap-4 sm:grid-cols-2"></div>
+
+        <div class="mt-8 flex justify-between gap-3">
+          <a id="back-to-details" href="index.html#services" class="btn btn-secondary">Cancel</a>
+          <button class="btn btn-primary">Save &amp; Continue</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Step 2: Document upload -->
+    <section id="step-2" class="card p-6 mt-6 hidden">
+      <h2 class="font-bold text-lg" style="color: var(--navy)">Upload Supporting Documents</h2>
+      <p class="text-sm text-slate-500 mb-4">Accepted formats: PDF, JPG, PNG. Maximum size 5 MB per file.</p>
+      <div id="document-list" class="space-y-4"></div>
+      <div class="mt-8 flex justify-between gap-3">
+        <button type="button" class="btn btn-secondary" data-goto="1">Back</button>
+        <button type="button" class="btn btn-primary" id="documents-next">Continue to Review</button>
+      </div>
+    </section>
+
+    <!-- Step 3: Review -->
+    <section id="step-3" class="card p-6 mt-6 hidden">
+      <h2 class="font-bold text-lg mb-4" style="color: var(--navy)">Review Your Application</h2>
+      <div id="review"></div>
+      <div data-field class="mt-6">
+        <label class="flex items-start gap-2 text-sm">
+          <input id="declaration" type="checkbox" class="mt-1">
+          <span>I declare that the information provided is true to the best of my knowledge.</span>
+        </label>
+      </div>
+      <div class="mt-8 flex justify-between gap-3">
+        <button type="button" class="btn btn-secondary" data-goto="2">Back</button>
+        <button type="button" class="btn btn-primary" id="review-next">Proceed to Payment</button>
+      </div>
+    </section>
+
+    <!-- Step 4: Payment and submission (payment is simulated in the browser) -->
+    <section id="step-4" class="mt-6 hidden">
+      <div class="grid gap-6 md:grid-cols-5">
+        <div class="card p-6 md:col-span-2 h-fit">
+          <h2 class="font-bold text-lg mb-4" style="color: var(--navy)">Payment Summary</h2>
+          <dl class="text-sm space-y-2">
+            <div class="flex justify-between"><dt>Certificate</dt><dd id="pay-cert" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt>Applicant</dt><dd id="pay-name" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt>Application fee</dt><dd id="pay-fee"></dd></div>
+            <div class="flex justify-between"><dt>Convenience fee</dt><dd>₹0.00</dd></div>
+            <div class="flex justify-between border-t pt-2 text-base font-bold"><dt>Total</dt><dd id="pay-total"></dd></div>
+          </dl>
+          <p class="text-xs text-slate-500 mt-4 flex items-center gap-1"><span aria-hidden="true">🔒</span> Secure payment</p>
+        </div>
+
+        <div class="card p-6 md:col-span-3">
+          <div id="payment-form-panel">
+            <h2 class="font-bold text-lg mb-4" style="color: var(--navy)">Choose Payment Method</h2>
+            <div class="grid grid-cols-3 gap-2 mb-5" id="pay-methods">
+              <label class="border rounded p-3 text-center text-sm cursor-pointer has-[:checked]:border-blue-800 has-[:checked]:bg-blue-50">
+                <input type="radio" name="pay-method" value="UPI" class="sr-only" checked>UPI
+              </label>
+              <label class="border rounded p-3 text-center text-sm cursor-pointer has-[:checked]:border-blue-800 has-[:checked]:bg-blue-50">
+                <input type="radio" name="pay-method" value="Card" class="sr-only">Debit / Credit Card
+              </label>
+              <label class="border rounded p-3 text-center text-sm cursor-pointer has-[:checked]:border-blue-800 has-[:checked]:bg-blue-50">
+                <input type="radio" name="pay-method" value="Net Banking" class="sr-only">Net Banking
+              </label>
+            </div>
+
+            <div class="pay-fields" data-method="UPI" data-field>
+              <label for="upi-id" class="label">UPI ID <span class="req">*</span></label>
+              <input id="upi-id" class="input" placeholder="name@bank">
+            </div>
+            <div class="pay-fields hidden grid gap-4 grid-cols-2" data-method="Card">
+              <div data-field class="col-span-2">
+                <label for="card-number" class="label">Card Number <span class="req">*</span></label>
+                <input id="card-number" class="input" inputmode="numeric" maxlength="19" placeholder="4111 1111 1111 1111">
+              </div>
+              <div data-field>
+                <label for="card-expiry" class="label">Expiry (MM/YY) <span class="req">*</span></label>
+                <input id="card-expiry" class="input" maxlength="5" placeholder="12/29">
+              </div>
+              <div data-field>
+                <label for="card-cvv" class="label">CVV <span class="req">*</span></label>
+                <input id="card-cvv" type="password" class="input" inputmode="numeric" maxlength="3">
+              </div>
+            </div>
+            <div class="pay-fields hidden" data-method="Net Banking" data-field>
+              <label for="bank" class="label">Select Bank <span class="req">*</span></label>
+              <select id="bank" class="input">
+                <option value="">Select bank</option>
+                <option>State Bank of India</option>
+                <option>Bank of Maharashtra</option>
+                <option>Maharashtra Gramin Bank</option>
+                <option>Other Bank</option>
+              </select>
+            </div>
+
+            <div class="mt-6 flex flex-wrap justify-between gap-3">
+              <button type="button" class="btn btn-secondary" data-goto="3">Back</button>
+              <div class="flex gap-3">
+                <button type="button" class="btn border-red-700 text-red-700 bg-white hover:bg-red-50" id="cancel-pay-btn">Cancel Payment</button>
+                <button type="button" class="btn btn-accent" id="pay-btn">Pay</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="payment-processing-panel" class="hidden text-center py-10">
+            <div class="w-12 h-12 rounded-full border-4 border-slate-200 border-t-blue-900 animate-spin mx-auto"></div>
+            <h2 id="processing-title" class="font-bold text-lg mt-4" style="color: var(--navy)">Processing payment…</h2>
+            <p id="processing-text" class="text-sm text-slate-500 mt-1">Please do not refresh the page or press back.</p>
+          </div>
+
+          <div id="payment-failed-panel" class="hidden text-center">
+            <div class="w-14 h-14 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-3xl mx-auto">✕</div>
+            <h2 class="font-bold text-lg mt-3 text-red-800">Payment Failed</h2>
+            <p class="text-sm text-slate-600 mt-1">The transaction was cancelled. No amount has been debited from your account.</p>
+            <dl class="text-sm mt-4 space-y-1 inline-block text-left">
+              <div><dt class="inline text-slate-500">Transaction ID:</dt> <dd class="inline font-mono font-semibold" id="failed-txn-ref"></dd></div>
+              <div><dt class="inline text-slate-500">Amount:</dt> <dd class="inline" id="failed-txn-amount"></dd></div>
+            </dl>
+            <div class="mt-6 flex flex-col sm:flex-row gap-3 justify-center">
+              <button type="button" class="btn btn-accent" id="retry-pay-btn">Retry Payment</button>
+              <button type="button" class="btn btn-secondary" data-goto="3">Back to Review</button>
+            </div>
+          </div>
+
+          <div id="payment-done-panel" class="hidden text-center">
+            <div class="w-14 h-14 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-3xl mx-auto">✓</div>
+            <h2 class="font-bold text-lg mt-3 text-green-800">Payment Received</h2>
+            <p class="text-sm text-slate-600 mt-1">Transaction ID <span class="font-mono font-semibold" id="done-txn-ref"></span></p>
+            <p id="submit-error" class="text-sm text-red-700 mt-4"></p>
+            <button type="button" class="btn btn-primary mt-4 w-full" id="submit-btn">Submit Application</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="js/session.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/apply.js"></script>
+</body>
+</html>
